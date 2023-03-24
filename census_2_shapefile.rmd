@@ -76,6 +76,5 @@ plot(nc_income["estimate"])
 ```
 
 ```{r, echo=FALSE}
-```
 
-```{r, echo=FALSE}
+```
