@@ -1,0 +1,81 @@
+---
+title: "Final Project"
+author: "Heywood Williams-Tracy"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(tidycensus)
+library(sf)
+library(rgdal)
+library(raster)
+```
+
+```{r, echo=FALSE}
+var = "B25105_001" ## Median Monthly Housing Costs
+st = 'NC'
+counties = c("Caldwell")
+shp = "CaldwellCounty.shp"
+
+df2017 = get_acs(geography = "tract", variables = var, state=st, county=counties, geometry = TRUE, year = 2017, cache_table = TRUE)
+df2012 = get_acs(geography = "tract", variables = var, state=st, county=counties, geometry = FALSE, year = 2012, cache_table = TRUE)
+```
+
+```{r, echo=FALSE}
+#lstYrs = list(df2017, df2012)
+#dfJoin = reduce(lstYrs, left_join, by = c("GEOID"))
+#dfJoin = select(dfJoin, GEOID, NAME = NAME.x, `YR_2017` = estimate.x, `YR_2012` = estimate.y)
+#dfJoin = mutate(dfJoin, CHANGE = ((YR_2017 - YR_2012) / YR_2012) * 100)
+#head(dfJoin)
+```
+
+```{r, echo=FALSE}
+#st_write(dfJoin, shp)
+```
+
+```{r, echo=FALSE}
+# View the shapefile with ggplot2
+ggplot() +
+  geom_sf(data = st_read(shp), aes(fill = CHANGE)) +
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_void() +
+  theme(legend.position = "bottom")
+```
+
+```{r, echo=FALSE}
+# Combine the two shapefiles into one
+shp1 = readOGR("CaldwellCounty.shp")
+shp2 = readOGR("Counties.shp")
+
+#summary(shp1)
+#summary(shp2)
+
+#plot(shp1, col='blue')
+#plot(shp2, add=TRUE, col='red')
+
+shp_union <- union(shp1, shp2)
+
+plot(shp_union, col='green')
+```
+
+```{r, echo=FALSE}
+options(tigris_use_cache = TRUE)
+
+nc_income <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  state = "NC",
+  year = 2020,
+  geometry = TRUE
+)
+
+plot(nc_income["estimate"])
+```
+
+```{r, echo=FALSE}
+```
+
+```{r, echo=FALSE}
