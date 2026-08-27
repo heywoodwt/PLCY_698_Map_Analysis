@@ -27,6 +27,3 @@ install.packages(c("sf", "tidyverse", "tmap"))
 
 Companion to [Flood_Analysis_PLCY_698](https://github.com/heywoodwt/Flood_Analysis_PLCY_698).
 
-## License
-
-MIT
